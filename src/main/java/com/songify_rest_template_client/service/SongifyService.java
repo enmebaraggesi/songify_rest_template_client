@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.*;
+import java.util.Map;
 
 @Service
 public class SongifyService {
@@ -39,6 +39,28 @@ public class SongifyService {
                                       .path("songs")
                                       .build()
                                       .toUri();
+        try {
+            ResponseEntity<AllSongsReceived> response = restTemplate.exchange(
+                    uri,
+                    HttpMethod.GET,
+                    null,
+                    AllSongsReceived.class);
+            return songMapper.mapAllSongsReceivedToSongList(response.getBody());
+        } catch (RestClientException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    public Map<Integer, Song> getAllSongsLimited(Integer limit) {
+        URI uri = UriComponentsBuilder.newInstance()
+                                      .scheme("http")
+                                      .host(songifyUrl)
+                                      .port(songifyPort)
+                                      .path("songs")
+                                      .queryParam("limit", limit)
+                                      .build()
+                                      .toUri();
+        
         try {
             ResponseEntity<AllSongsReceived> response = restTemplate.exchange(
                     uri,

@@ -20,4 +20,9 @@ public class SongifyClient {
     public Map<Integer, Song> getAllSongs() {
         return songifyService.getAllSongs();
     }
+    
+    @GetMapping
+    public Map<Integer, Song> getAllSongsLimited(Integer limit) {
+        return songifyService.getAllSongsLimited(limit);
+    }
 }

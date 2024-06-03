@@ -16,8 +16,14 @@ public class RunnerConfig {
     @Bean
     CommandLineRunner init(SongifyClient songifyClient) {
         return args -> {
+            log.info("Requesting all songs...");
             Map<Integer, Song> allSongs = songifyClient.getAllSongs();
             allSongs.forEach(
+                    (id, value) -> log.info("ID {}: '{}' of '{}'", id, value.name(), value.artist())
+            );
+            log.info("Requesting all songs limited to 3...");
+            Map<Integer, Song> allSongsLimited = songifyClient.getAllSongsLimited(3);
+            allSongsLimited.forEach(
                     (id, value) -> log.info("ID {}: '{}' of '{}'", id, value.name(), value.artist())
             );
         };
