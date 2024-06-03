@@ -31,6 +31,10 @@ public class RunnerConfig {
                     RunnerConfig::getInformed
             );
             Integer idForSongById = 2;
+            Song updatedSong = new Song("updatedSong", "updatedArtist");
+            log.info("Updating song by ID {}...", idForSongById);
+            Song updatedSongById = songifyClient.putSongById(idForSongById, updatedSong);
+            getInformed(idForSongById, updatedSongById);
             log.info("Requesting song by ID {}...", idForSongById);
             Song songById = songifyClient.getSongById(idForSongById);
             getInformed(idForSongById, songById);

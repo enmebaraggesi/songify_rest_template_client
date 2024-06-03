@@ -117,4 +117,26 @@ public class SongifyService {
             throw new RuntimeException(e);
         }
     }
+    
+    public Song putSongById(Integer id, Song song) {
+        URI uri = UriComponentsBuilder.newInstance()
+                                      .scheme("http")
+                                      .host(songifyUrl)
+                                      .port(songifyPort)
+                                      .path("songs/" + id)
+                                      .build()
+                                      .toUri();
+        SongRequestDto songRequestDto = songMapper.mapSongToSongRequest(song);
+        HttpEntity<SongRequestDto> entity = new HttpEntity<>(songRequestDto);
+        try {
+            ResponseEntity<SongUpdatedDto> response = restTemplate.exchange(
+                    uri,
+                    HttpMethod.PUT,
+                    entity,
+                    SongUpdatedDto.class);
+            return songMapper.mapSongUpdatedDtoToSong(response.getBody());
+        } catch (RestClientException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

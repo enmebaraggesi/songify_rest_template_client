@@ -3,8 +3,7 @@ package com.songify_rest_template_client.client;
 import com.songify_rest_template_client.received.Song;
 import com.songify_rest_template_client.service.SongifyService;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -35,5 +34,10 @@ public class SongifyClient {
     @PostMapping
     public Song postNewSong(Song song) {
         return songifyService.postNewSong(song);
+    }
+    
+    @PutMapping
+    public Song putSongById(Integer id, Song song) {
+        return songifyService.putSongById(id, song);
     }
 }

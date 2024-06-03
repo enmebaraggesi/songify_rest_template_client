@@ -27,4 +27,11 @@ public class SongMapper {
     public SongRequestDto mapSongToSongRequest(Song song) {
         return new SongRequestDto(song.name(), song.artist());
     }
+    
+    public Song mapSongUpdatedDtoToSong(SongUpdatedDto body) {
+        if (body == null) {
+            return null;
+        }
+        return new Song(body.songName(), body.artist());
+    }
 }
