@@ -21,23 +21,36 @@ public class RunnerConfig {
             allSongsLimited.forEach(
                     RunnerConfig::getInformed
             );
+
             log.info("Adding new song...");
             Song newSong = new Song("newSong", "newArtist");
             Song postedNewSong = songifyClient.postNewSong(newSong);
             log.info(postedNewSong);
+
             log.info("Requesting all songs...");
             Map<Integer, Song> allSongs = songifyClient.getAllSongs();
             allSongs.forEach(
                     RunnerConfig::getInformed
             );
+
             Integer idForSongById = 2;
             Song updatedSong = new Song("updatedSong", "updatedArtist");
             log.info("Updating song by ID {}...", idForSongById);
             Song updatedSongById = songifyClient.putSongById(idForSongById, updatedSong);
             getInformed(idForSongById, updatedSongById);
+
             log.info("Requesting song by ID {}...", idForSongById);
             Song songById = songifyClient.getSongById(idForSongById);
             getInformed(idForSongById, songById);
+            
+            // For more info see --> SongifyService.class
+//            Integer idForPatch = 3;
+//            Song patchedSong = new Song("patchedSong", null);
+//            log.info("Patching song by ID {}...", idForPatch);
+//            String message = songifyClient.patchSongById(idForPatch, patchedSong);
+//            log.info(message);
+        
+        
         };
     }
     

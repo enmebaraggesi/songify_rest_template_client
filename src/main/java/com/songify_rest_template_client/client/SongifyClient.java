@@ -40,4 +40,10 @@ public class SongifyClient {
     public Song putSongById(Integer id, Song song) {
         return songifyService.putSongById(id, song);
     }
+    
+    // For more info see --> SongifyService.class
+//    @PatchMapping
+//    public String patchSongById(Integer id, Song song) {
+//        return songifyService.patchSongById(id, song);
+//    }
 }

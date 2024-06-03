@@ -34,4 +34,9 @@ public class SongMapper {
         }
         return new Song(body.songName(), body.artist());
     }
+    
+    // For more info see --> SongifyService.class
+//    public String mapSongPatchedDtoToSong(SongPatchedDto body) {
+//        return body.message();
+//    }
 }
