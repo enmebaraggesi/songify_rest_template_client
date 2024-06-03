@@ -1,6 +1,7 @@
 package com.songify_rest_template_client.service;
 
 import com.songify_rest_template_client.received.*;
+import com.songify_rest_template_client.requested.SongRequestDto;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -21,5 +22,9 @@ public class SongMapper {
             return null;
         }
         return body.song();
+    }
+    
+    public SongRequestDto mapSongToSongRequest(Song song) {
+        return new SongRequestDto(song.name(), song.artist());
     }
 }

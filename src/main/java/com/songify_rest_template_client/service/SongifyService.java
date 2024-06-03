@@ -1,6 +1,7 @@
 package com.songify_rest_template_client.service;
 
 import com.songify_rest_template_client.received.*;
+import com.songify_rest_template_client.requested.SongRequestDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -87,6 +88,28 @@ public class SongifyService {
             ResponseEntity<SongReceived> response = restTemplate.exchange(
                     uri,
                     HttpMethod.GET,
+                    entity,
+                    SongReceived.class);
+            return songMapper.mapSongReceivedToSong(response.getBody());
+        } catch (RestClientException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    public Song postNewSong(Song song) {
+        URI uri = UriComponentsBuilder.newInstance()
+                                      .scheme("http")
+                                      .host(songifyUrl)
+                                      .port(songifyPort)
+                                      .path("songs")
+                                      .build()
+                                      .toUri();
+        SongRequestDto songRequestDto = songMapper.mapSongToSongRequest(song);
+        HttpEntity<SongRequestDto> entity = new HttpEntity<>(songRequestDto);
+        try {
+            ResponseEntity<SongReceived> response = restTemplate.exchange(
+                    uri,
+                    HttpMethod.POST,
                     entity,
                     SongReceived.class);
             return songMapper.mapSongReceivedToSong(response.getBody());
