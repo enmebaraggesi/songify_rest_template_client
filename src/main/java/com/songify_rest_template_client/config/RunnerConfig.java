@@ -19,13 +19,21 @@ public class RunnerConfig {
             log.info("Requesting all songs...");
             Map<Integer, Song> allSongs = songifyClient.getAllSongs();
             allSongs.forEach(
-                    (id, value) -> log.info("ID {}: '{}' of '{}'", id, value.name(), value.artist())
+                    RunnerConfig::getInformed
             );
             log.info("Requesting all songs limited to 3...");
             Map<Integer, Song> allSongsLimited = songifyClient.getAllSongsLimited(3);
             allSongsLimited.forEach(
-                    (id, value) -> log.info("ID {}: '{}' of '{}'", id, value.name(), value.artist())
+                    RunnerConfig::getInformed
             );
+            Integer idForSongById = 2;
+            log.info("Requesting song by ID {}", idForSongById);
+            Song songById = songifyClient.getSongById(idForSongById);
+            getInformed(idForSongById, songById);
         };
+    }
+    
+    private static void getInformed(Integer id, Song song) {
+        log.info("ID {}: '{}' of '{}'", id, song.name(), song.artist());
     }
 }

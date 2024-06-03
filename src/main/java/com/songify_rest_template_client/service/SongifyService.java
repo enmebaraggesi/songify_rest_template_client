@@ -1,10 +1,8 @@
 package com.songify_rest_template_client.service;
 
-import com.songify_rest_template_client.received.AllSongsReceived;
-import com.songify_rest_template_client.received.Song;
+import com.songify_rest_template_client.received.*;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -12,6 +10,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.Random;
 
 @Service
 public class SongifyService {
@@ -60,7 +59,6 @@ public class SongifyService {
                                       .queryParam("limit", limit)
                                       .build()
                                       .toUri();
-        
         try {
             ResponseEntity<AllSongsReceived> response = restTemplate.exchange(
                     uri,
@@ -68,6 +66,30 @@ public class SongifyService {
                     null,
                     AllSongsReceived.class);
             return songMapper.mapAllSongsReceivedToSongList(response.getBody());
+        } catch (RestClientException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    public Song getSongById(Integer id) {
+        URI uri = UriComponentsBuilder.newInstance()
+                                      .scheme("http")
+                                      .host(songifyUrl)
+                                      .port(songifyPort)
+                                      .path("songs/" + id)
+                                      .build()
+                                      .toUri();
+        int randomSeed = new Random().nextInt();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("requestId", String.valueOf(randomSeed));
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+        try {
+            ResponseEntity<SongReceived> response = restTemplate.exchange(
+                    uri,
+                    HttpMethod.GET,
+                    entity,
+                    SongReceived.class);
+            return songMapper.mapSongReceivedToSong(response.getBody());
         } catch (RestClientException e) {
             throw new RuntimeException(e);
         }

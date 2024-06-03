@@ -1,7 +1,6 @@
 package com.songify_rest_template_client.service;
 
-import com.songify_rest_template_client.received.AllSongsReceived;
-import com.songify_rest_template_client.received.Song;
+import com.songify_rest_template_client.received.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -15,5 +14,12 @@ public class SongMapper {
             return Collections.emptyMap();
         }
         return body.songs();
+    }
+    
+    public Song mapSongReceivedToSong(SongReceived body) {
+        if (body == null) {
+            return null;
+        }
+        return body.song();
     }
 }
