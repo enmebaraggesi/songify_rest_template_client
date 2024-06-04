@@ -41,6 +41,11 @@ public class SongifyClient {
         return songifyService.putSongById(id, song);
     }
     
+    @DeleteMapping
+    public String deleteSongById(Integer id) {
+        return songifyService.deleteSongById(id);
+    }
+    
     // For more info see --> SongifyService.class
 //    @PatchMapping
 //    public String patchSongById(Integer id, Song song) {

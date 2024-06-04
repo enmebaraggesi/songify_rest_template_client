@@ -35,6 +35,13 @@ public class SongMapper {
         return new Song(body.songName(), body.artist());
     }
     
+    public String mapSongDeletedDtoToString(SongDeletedDto body) {
+        if (body == null) {
+            return null;
+        }
+        return body.message() + ", status: " + body.status();
+    }
+    
     // For more info see --> SongifyService.class
 //    public String mapSongPatchedDtoToSong(SongPatchedDto body) {
 //        return body.message();

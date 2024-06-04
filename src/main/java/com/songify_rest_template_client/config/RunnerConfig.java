@@ -16,18 +16,18 @@ public class RunnerConfig {
     @Bean
     CommandLineRunner init(SongifyClient songifyClient) {
         return args -> {
-            log.info("Requesting all songs limited to 3...");
+            log.info("Step 1. Requesting all songs limited to 3...");
             Map<Integer, Song> allSongsLimited = songifyClient.getAllSongsLimited(3);
             allSongsLimited.forEach(
                     RunnerConfig::getInformed
             );
 
-            log.info("Adding new song...");
+            log.info("Step 2. Adding new song...");
             Song newSong = new Song("newSong", "newArtist");
             Song postedNewSong = songifyClient.postNewSong(newSong);
             log.info(postedNewSong);
 
-            log.info("Requesting all songs...");
+            log.info("Step 3. Requesting all songs...");
             Map<Integer, Song> allSongs = songifyClient.getAllSongs();
             allSongs.forEach(
                     RunnerConfig::getInformed
@@ -35,13 +35,23 @@ public class RunnerConfig {
 
             Integer idForSongById = 2;
             Song updatedSong = new Song("updatedSong", "updatedArtist");
-            log.info("Updating song by ID {}...", idForSongById);
+            log.info("Step 4. Updating song by ID {}...", idForSongById);
             Song updatedSongById = songifyClient.putSongById(idForSongById, updatedSong);
             getInformed(idForSongById, updatedSongById);
 
-            log.info("Requesting song by ID {}...", idForSongById);
+            log.info("Step 5. Requesting song by ID {}...", idForSongById);
             Song songById = songifyClient.getSongById(idForSongById);
             getInformed(idForSongById, songById);
+            
+            log.info("Step 6. Deleting song with ID {}... ", idForSongById);
+            String message = songifyClient.deleteSongById(idForSongById);
+            log.info(message);
+            
+            log.info("Step 7. Requesting all songs...");
+            Map<Integer, Song> allSongs2 = songifyClient.getAllSongs();
+            allSongs2.forEach(
+                    RunnerConfig::getInformed
+            );
             
             // For more info see --> SongifyService.class
 //            Integer idForPatch = 3;
@@ -49,8 +59,6 @@ public class RunnerConfig {
 //            log.info("Patching song by ID {}...", idForPatch);
 //            String message = songifyClient.patchSongById(idForPatch, patchedSong);
 //            log.info(message);
-        
-        
         };
     }
     

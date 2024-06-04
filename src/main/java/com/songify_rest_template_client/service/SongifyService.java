@@ -140,6 +140,26 @@ public class SongifyService {
         }
     }
     
+    public String deleteSongById(Integer id) {
+        URI uri = UriComponentsBuilder.newInstance()
+                                      .scheme("http")
+                                      .host(songifyUrl)
+                                      .port(songifyPort)
+                                      .path("songs/" + id)
+                                      .build()
+                                      .toUri();
+        try {
+            ResponseEntity<SongDeletedDto> response = restTemplate.exchange(
+                    uri,
+                    HttpMethod.DELETE,
+                    null,
+                    SongDeletedDto.class);
+            return songMapper.mapSongDeletedDtoToString(response.getBody());
+        } catch (RestClientException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
     // PATCH method not working with RestTemplate HttpConnection methods
 //    public String patchSongById(Integer id, Song song) {
 //        URI uri = UriComponentsBuilder.newInstance()
