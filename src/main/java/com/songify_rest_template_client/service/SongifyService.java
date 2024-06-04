@@ -1,7 +1,9 @@
 package com.songify_rest_template_client.service;
 
+import com.songify_rest_template_client.client.Song;
 import com.songify_rest_template_client.received.*;
 import com.songify_rest_template_client.requested.SongRequestDto;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import java.net.URI;
 import java.util.Map;
 import java.util.Random;
 
+@Log4j2
 @Service
 public class SongifyService {
     
@@ -40,14 +43,15 @@ public class SongifyService {
                                       .build()
                                       .toUri();
         try {
-            ResponseEntity<AllSongsReceived> response = restTemplate.exchange(
+            ResponseEntity<AllSongsReceivedDto> response = restTemplate.exchange(
                     uri,
                     HttpMethod.GET,
                     null,
-                    AllSongsReceived.class);
+                    AllSongsReceivedDto.class);
             return songMapper.mapAllSongsReceivedToSongList(response.getBody());
         } catch (RestClientException e) {
-            throw new RuntimeException(e);
+            errorMessage(e);
+            return null;
         }
     }
     
@@ -61,14 +65,15 @@ public class SongifyService {
                                       .build()
                                       .toUri();
         try {
-            ResponseEntity<AllSongsReceived> response = restTemplate.exchange(
+            ResponseEntity<AllSongsReceivedDto> response = restTemplate.exchange(
                     uri,
                     HttpMethod.GET,
                     null,
-                    AllSongsReceived.class);
+                    AllSongsReceivedDto.class);
             return songMapper.mapAllSongsReceivedToSongList(response.getBody());
         } catch (RestClientException e) {
-            throw new RuntimeException(e);
+            errorMessage(e);
+            return null;
         }
     }
     
@@ -80,19 +85,20 @@ public class SongifyService {
                                       .path("songs/" + id)
                                       .build()
                                       .toUri();
-        int randomSeed = new Random().nextInt();
+        String randomSeed = String.valueOf(new Random().nextInt(0, 99));
         HttpHeaders headers = new HttpHeaders();
-        headers.add("requestId", String.valueOf(randomSeed));
+        headers.add("requestId", randomSeed);
         HttpEntity<String> entity = new HttpEntity<>(headers);
         try {
-            ResponseEntity<SongReceived> response = restTemplate.exchange(
+            ResponseEntity<SongReceivedDto> response = restTemplate.exchange(
                     uri,
                     HttpMethod.GET,
                     entity,
-                    SongReceived.class);
+                    SongReceivedDto.class);
             return songMapper.mapSongReceivedToSong(response.getBody());
         } catch (RestClientException e) {
-            throw new RuntimeException(e);
+            errorMessage(e);
+            return null;
         }
     }
     
@@ -107,14 +113,15 @@ public class SongifyService {
         SongRequestDto songRequestDto = songMapper.mapSongToSongRequest(song);
         HttpEntity<SongRequestDto> entity = new HttpEntity<>(songRequestDto);
         try {
-            ResponseEntity<SongReceived> response = restTemplate.exchange(
+            ResponseEntity<SongReceivedDto> response = restTemplate.exchange(
                     uri,
                     HttpMethod.POST,
                     entity,
-                    SongReceived.class);
+                    SongReceivedDto.class);
             return songMapper.mapSongReceivedToSong(response.getBody());
         } catch (RestClientException e) {
-            throw new RuntimeException(e);
+            errorMessage(e);
+            return null;
         }
     }
     
@@ -136,7 +143,8 @@ public class SongifyService {
                     SongUpdatedDto.class);
             return songMapper.mapSongUpdatedDtoToSong(response.getBody());
         } catch (RestClientException e) {
-            throw new RuntimeException(e);
+            errorMessage(e);
+            return null;
         }
     }
     
@@ -156,7 +164,8 @@ public class SongifyService {
                     SongDeletedDto.class);
             return songMapper.mapSongDeletedDtoToString(response.getBody());
         } catch (RestClientException e) {
-            throw new RuntimeException(e);
+            errorMessage(e);
+            return null;
         }
     }
     
@@ -179,9 +188,12 @@ public class SongifyService {
 //                    SongPatchedDto.class);
 //            return songMapper.mapSongPatchedDtoToSong(response.getBody());
 //        } catch (RestClientException e) {
-//            throw new RuntimeException(e);
+//            errorMessage(e);
+//            return null;
 //        }
 //    }
-
-
+    
+    private static void errorMessage(RestClientException e) {
+        log.error("Something went wrong: {}", e.getMessage());
+    }
 }

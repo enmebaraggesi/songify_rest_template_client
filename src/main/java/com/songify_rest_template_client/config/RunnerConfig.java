@@ -1,7 +1,7 @@
 package com.songify_rest_template_client.config;
 
+import com.songify_rest_template_client.client.Song;
 import com.songify_rest_template_client.client.SongifyClient;
-import com.songify_rest_template_client.received.Song;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -21,24 +21,24 @@ public class RunnerConfig {
             allSongsLimited.forEach(
                     RunnerConfig::getInformed
             );
-
+            
             log.info("Step 2. Adding new song...");
             Song newSong = new Song("newSong", "newArtist");
             Song postedNewSong = songifyClient.postNewSong(newSong);
             log.info(postedNewSong);
-
+            
             log.info("Step 3. Requesting all songs...");
             Map<Integer, Song> allSongs = songifyClient.getAllSongs();
             allSongs.forEach(
                     RunnerConfig::getInformed
             );
-
+            
             Integer idForSongById = 2;
             Song updatedSong = new Song("updatedSong", "updatedArtist");
             log.info("Step 4. Updating song by ID {}...", idForSongById);
             Song updatedSongById = songifyClient.putSongById(idForSongById, updatedSong);
             getInformed(idForSongById, updatedSongById);
-
+            
             log.info("Step 5. Requesting song by ID {}...", idForSongById);
             Song songById = songifyClient.getSongById(idForSongById);
             getInformed(idForSongById, songById);

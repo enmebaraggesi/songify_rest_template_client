@@ -1,5 +1,6 @@
 package com.songify_rest_template_client.service;
 
+import com.songify_rest_template_client.client.Song;
 import com.songify_rest_template_client.received.*;
 import com.songify_rest_template_client.requested.SongRequestDto;
 import org.springframework.stereotype.Service;
@@ -10,16 +11,16 @@ import java.util.Map;
 @Service
 public class SongMapper {
     
-    public Map<Integer, Song> mapAllSongsReceivedToSongList(AllSongsReceived body) {
+    public Map<Integer, Song> mapAllSongsReceivedToSongList(AllSongsReceivedDto body) {
         if (body == null) {
             return Collections.emptyMap();
         }
         return body.songs();
     }
     
-    public Song mapSongReceivedToSong(SongReceived body) {
+    public Song mapSongReceivedToSong(SongReceivedDto body) {
         if (body == null) {
-            return null;
+            return new Song("", "");
         }
         return body.song();
     }
@@ -30,14 +31,14 @@ public class SongMapper {
     
     public Song mapSongUpdatedDtoToSong(SongUpdatedDto body) {
         if (body == null) {
-            return null;
+            return new Song("", "");
         }
         return new Song(body.songName(), body.artist());
     }
     
     public String mapSongDeletedDtoToString(SongDeletedDto body) {
         if (body == null) {
-            return null;
+            return "";
         }
         return body.message() + ", status: " + body.status();
     }
